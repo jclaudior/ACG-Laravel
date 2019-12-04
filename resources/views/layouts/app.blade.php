@@ -33,15 +33,22 @@
                 
             @endcomponent
         @else
-            @component('layouts.componente_navbar_admin')
+            @if(Auth::user()->hasRole('admin'))
+                @component('layouts.componente_navbar_admin')
 
-            @endcomponent
+                @endcomponent
+            @else
+                @component('layouts.componente_navbar_user')
+
+                @endcomponent
+            @endif
         @endguest
 
         <main class="py-4">
             @yield('content')
         </main>
     </div>
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 </body>
