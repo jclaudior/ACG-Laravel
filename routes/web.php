@@ -19,6 +19,6 @@ Auth::routes();
 
 Route::get('/home2', 'HomeController@someAdminStuff')->name('home2');
 
-Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::resource('contato', 'ContactController');

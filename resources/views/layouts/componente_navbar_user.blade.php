@@ -17,7 +17,7 @@
                             Contato Clientes
                         </a>
                         <div class="dropdown-menu bg-dark ">
-                            <a class="dropdown-item text-light" href="cadFormContato.php">Cadastro Contato</a>
+                            <a class="dropdown-item text-light" href="/contato">Cadastro Contato</a>
                             <a class="dropdown-item text-light" href="contatoRel.php">Relatorio Contatos</a>
                         </div>  
                     </li>
