@@ -17,8 +17,8 @@
                             Contato Clientes
                         </a>
                         <div class="dropdown-menu bg-dark ">
-                            <a class="dropdown-item text-light" href="/contato">Cadastro Contato</a>
-                            <a class="dropdown-item text-light" href="contatoRel.php">Relatorio Contatos</a>
+                            <a class="dropdown-item text-light" href="{{route('contato.create')}}">Cadastro Contato</a>
+                            <a class="dropdown-item text-light" href="/contato">Relatorio Contatos</a>
                         </div>  
                     </li>
                 </ul>
