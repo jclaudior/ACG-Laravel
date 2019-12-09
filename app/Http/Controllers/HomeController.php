@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -24,7 +25,16 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $request->user()->authorizeRoles(['padrao','admin']);
-        return view('home');
+
+        $id = Auth::user()->id;
+        
+        $contatos = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
+                    ->select('cad_contacts.*','cad_rets.ret_fin')->where('cad_rets.ret_dt',date('Y-m-d'))
+                    ->where('cad_contacts.user_id',$id)->get()->toArray();
+        
+        $contatos = json_decode(json_encode($contatos), true);
+        
+        return view("home")->with(compact('contatos'));
     }
 
     public function someAdminStuff(Request $request){

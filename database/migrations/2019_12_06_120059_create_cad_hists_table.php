@@ -17,6 +17,8 @@ class CreateCadHistsTable extends Migration
             $table->bigIncrements('id');
             $table->integer('contact_id')->unsigned();
             $table->foreign('contact_id')->references('id')->on('cad_contacts');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->string('hist_cont')->nullable(false);
             $table->timestamps();
         });

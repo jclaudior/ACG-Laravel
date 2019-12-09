@@ -41,6 +41,26 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function contatos(){
+
+        return $this->hasMany(Cad_contact::class);
+
+    }
+
+    public function historico(){
+
+        return $this->hasMany(Cad_hists::class);
+
+    }
+
+    public function retornos(){
+
+        return $this->hasMany(Cad_rets::class);
+        
+    }
+
+
+
     public function authorizeRoles($roles){
         if(is_array($roles)){
             return $this->hasAnyRole($roles) || abort(401,"Ação não autorizada!");

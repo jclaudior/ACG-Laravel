@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Cad_contact;
 use App\Cad_hists;
 use App\Cad_rets;
+use App\User;
 use Auth;
 
 class ContactController extends Controller
@@ -25,8 +26,13 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $request->user()->authorizeRoles(['padrao','admin']);
-        return view("contato.contatoRel");
-        
+
+        $id = Auth::user()->id;
+        $contatos = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
+                    ->select('cad_contacts.*','cad_rets.ret_fin')->where('cad_rets.ret_dt',date('Y-m-d'))
+                    ->where('cad_contacts.user_id',$id)->get()->toArray();
+                    $contatos = json_decode(json_encode($contatos), true);
+        return view("contato.contatoRel")->with(compact('contatos'));
     }
 
     /**
@@ -79,10 +85,12 @@ class ContactController extends Controller
 
         $retorno = new Cad_rets;
         $retorno->contact_id = DB::getPdo()->lastInsertId();
+        $retorno->user_id = Auth::user()->id;
         $retorno->ret_dt = $request->input('dataRet');
 
         $historico = new Cad_hists;
         $historico->contact_id = DB::getPdo()->lastInsertId();
+        $historico->user_id = Auth::user()->id;
         $historico->hist_cont = $request->input('historico');    
 
         $retorno->save();
