@@ -5,7 +5,7 @@
         <br>
         <h3 class="display-5">Retornos @php  echo date('d/m/Y') @endphp</h3>
         <hr>
-        @if(isset($contatos))
+        @if($contatos<>null)
             @for($i=0;$i < count($contatos);$i++)
                 @if($contatos[$i]['ret_fin'] == 0)
                     <div class='alert alert-danger' role='alert'>
@@ -40,6 +40,8 @@
                     </div>
                 @endif
             @endfor
+        @else
+            Nenhum retorno encontrado nesta data!
         @endif
     </div>   
 @endsection

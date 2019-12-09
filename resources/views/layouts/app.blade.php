@@ -48,7 +48,13 @@
             @yield('content')
         </main>
     </div>
-
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 text-center  p-2">
+                <a href="#">@Copyright Central Logística</a>
+            </div>
+        </div>
+    </div>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
     @yield('script')
