@@ -17,7 +17,7 @@
                                 Não Finalizado
                             </div>
                             <div class='col-lg-2 col-sm-12 text-right'>
-                                <a href='retForm.php?id=$id_cont'>Abrir</a>
+                                <a href='{{ route('contato.show', $contatos[$i]['id'])}}'>Abrir</a>
                             </div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                                 Finalizado
                             </div>
                             <div class='col-lg-2 col-sm-12 text-right'>
-                                <a href='retForm.php?id=$id_cont'>Abrir</a>
+                                <a href='{{ route('contato.show', $contatos[$i]['id'])}}'>Abrir</a>
                             </div>
                         </div>
                     </div>

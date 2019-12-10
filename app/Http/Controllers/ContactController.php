@@ -25,14 +25,96 @@ class ContactController extends Controller
      */
     public function index(Request $request)
     {
+        $valores = $request->all();
+
         $request->user()->authorizeRoles(['padrao','admin']);
 
-        $id = Auth::user()->id;
-        $contatos = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
-                    ->select('cad_contacts.*','cad_rets.ret_fin')->where('cad_rets.ret_dt',date('Y-m-d'))
-                    ->where('cad_contacts.user_id',$id)->get()->toArray();
-                    $contatos = json_decode(json_encode($contatos), true);
-        return view("contato.contatoRel")->with(compact('contatos'));
+        $users = DB::table('users')->select('id','name')->get();
+
+        $users = json_decode(json_encode($users), true);
+
+        if($request->input('id') <> null){
+            $id = $request->input('id');
+        }
+        else{
+            $id = Auth::user()->id;
+        }
+
+        $retornos = null;
+        $contatos = null;
+
+        if($request->input('tipo') == 2){
+            if($request->input('DI') <> null && $request->input('DF') <> null && $request->input('F') <> null && $request->input('NF') <> null){
+                $retornos = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
+                            ->join('users','cad_contacts.user_id','=','users.id')
+                            ->select('cad_contacts.*','cad_rets.ret_fin','cad_rets.ret_dt','users.name')->where('cad_rets.ret_dt','>=',$request->input('DI'))
+                            ->where('cad_rets.ret_dt','<=',$request->input('DF'))->where('cad_contacts.user_id',$id)
+                            ->get()
+                            ->toArray();
+                $retornos = json_decode(json_encode($retornos), true);
+            }
+
+            if($request->input('DI') <> null && $request->input('DF') <> null && $request->input('F') == null && $request->input('NF') <> null){
+                $retornos = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
+                            ->join('users','cad_contacts.user_id','=','users.id')
+                            ->select('cad_contacts.*','cad_rets.ret_fin','cad_rets.ret_dt','users.name')->where('cad_rets.ret_dt','>=',$request->input('DI'))
+                            ->where('cad_rets.ret_dt','<=',$request->input('DF'))->where('cad_contacts.user_id',$id)->where('cad_rets.ret_fin',0)
+                            ->get()
+                            ->toArray();
+                $retornos = json_decode(json_encode($retornos), true);
+            }
+
+            if($request->input('DI') <> null && $request->input('DF') <> null && $request->input('F') <> null && $request->input('NF') == null){
+                $retornos = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
+                            ->join('users','cad_contacts.user_id','=','users.id')
+                            ->select('cad_contacts.*','cad_rets.ret_fin','cad_rets.ret_dt','users.name')->where('cad_rets.ret_dt','>=',$request->input('DI'))
+                            ->where('cad_rets.ret_dt','<=',$request->input('DF'))->where('cad_contacts.user_id',$id)->where('cad_rets.ret_fin',1)
+                            ->get()
+                            ->toArray();
+                $retornos = json_decode(json_encode($retornos), true);
+            }
+        }
+        else if($request->input('tipo') == 1){
+            if($request->input('DI') <> null && $request->input('DF') <> null){
+                $contatos = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
+                            ->join('users','cad_contacts.user_id','=','users.id')
+                            ->select('cad_contacts.*','cad_rets.ret_fin','users.name')->where('cad_contacts.created_at','>=',$request->input('DI'))
+                            ->where('cad_contacts.created_at','<=',$request->input('DF'))->where('cad_contacts.user_id',$id)
+                            ->get()
+                            ->toArray();
+                $contatos = json_decode(json_encode($contatos), true);
+            }
+        }
+
+        if($retornos<>null){
+            $fin = 0;
+            $nfin = 0;
+            for($i=0;$i <  count($retornos);$i++){
+                if($retornos[$i]['ret_fin'] == 0){
+                    $nfin ++;
+                }
+                if($retornos[$i]['ret_fin'] == 1){
+                    $fin ++;
+                }
+            }
+        }
+        if($valores == null){
+            $valores = [
+                'tipo' => "2",
+                'userID' => "",
+                'DI' => "",
+                'DF' => "",
+                'F' => "F",
+                'NF' => "NF",
+            ];
+        }
+        return view("contato.contatoRel")->with(compact('retornos'))
+                                        ->with(compact('users'))
+                                        ->with(compact('fin'))
+                                        ->with(compact('nfin'))
+                                        ->with(compact('contatos'))
+                                        ->with(compact('valores'));
+
     }
 
     /**
@@ -106,9 +188,21 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $request->user()->authorizeRoles(['padrao','admin']);
+
+        $contato = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
+                            ->join('cad_hists','cad_contacts.id','=','cad_hists.contact_id')
+                            ->select('cad_contacts.*','cad_rets.ret_fin','cad_rets.ret_dt','cad_hists.hist_cont','cad_hists.created_at AS hist_dt','cad_hists.id AS hist_id')
+                            ->where('cad_contacts.id',$id)
+                            ->get()
+                            ->toArray();
+    
+        $contato = json_decode(json_encode($contato), true);
+        
+        
+        return view('contato.contatoInfo')->with(compact('contato'));
     }
 
     /**
