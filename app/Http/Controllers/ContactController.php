@@ -76,9 +76,9 @@ class ContactController extends Controller
         }
         else if($request->input('tipo') == 1){
             if($request->input('DI') <> null && $request->input('DF') <> null){
-                $contatos = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
+                $contatos = DB::table('cad_contacts')
                             ->join('users','cad_contacts.user_id','=','users.id')
-                            ->select('cad_contacts.*','cad_rets.ret_fin','users.name')->where('cad_contacts.created_at','>=',$request->input('DI'))
+                            ->select('cad_contacts.*','users.name')->where('cad_contacts.created_at','>=',$request->input('DI'))
                             ->where('cad_contacts.created_at','<=',$request->input('DF'))->where('cad_contacts.user_id',$id)
                             ->get()
                             ->toArray();
@@ -193,16 +193,18 @@ class ContactController extends Controller
         $request->user()->authorizeRoles(['padrao','admin']);
 
         $contato = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
-                            ->join('cad_hists','cad_contacts.id','=','cad_hists.contact_id')
-                            ->select('cad_contacts.*','cad_rets.ret_fin','cad_rets.ret_dt','cad_hists.hist_cont','cad_hists.created_at AS hist_dt','cad_hists.id AS hist_id')
+                            ->select('cad_contacts.*','cad_rets.ret_fin','cad_rets.ret_dt')
                             ->where('cad_contacts.id',$id)
                             ->get()
                             ->toArray();
-    
+        
+        $historico = Cad_hists::where('contact_id',$id)->get()->toArray();
+
+        $historico = json_decode(json_encode($historico), true);
+
         $contato = json_decode(json_encode($contato), true);
-        
-        
-        return view('contato.contatoInfo')->with(compact('contato'));
+      
+        return view('contato.contatoInfo')->with(compact('contato'))->with(compact('historico'));
     }
 
     /**
@@ -225,7 +227,39 @@ class ContactController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->user()->authorizeRoles(['padrao','admin']);
+
+        $validatedData = $request->validate([
+            'historico' => 'required',
+            'dataRet' => 'required',
+        ]);
+
+        $dataRet = DB::table('cad_rets')->select('ret_dt','id')->where('contact_id',$id)->where('ret_fin','0')->get();
+        
+        $ndata = $request->input('dataRet');
+
+        foreach ($dataRet as $key => $object) {
+            
+        }
+
+
+        if($object->ret_dt <> $ndata){
+            Cad_rets::find($object->id)->update(['ret_fin'=>'1']);
+            $novoRet = new Cad_rets();
+            $novoRet->user_id = Auth::user()->id;
+            $novoRet->contact_id = $id;
+            $novoRet->ret_dt = $request->input('dataRet');
+            $novoRet->save();
+        }
+
+        $novoHist = new Cad_hists();
+        $novoHist->user_id = Auth::user()->id;
+        $novoHist->contact_id = $id;
+        $novoHist->hist_cont = $request->input('historico');
+        $novoHist->save();
+
+        return back();
+
     }
 
     /**

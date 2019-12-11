@@ -35,14 +35,8 @@
                 <br>
                 <b>Historico Contato:</b><br>
                 <div class="pre-scrollable border border-dark">    
-                    @for($i=0;$i < count($contato); $i ++) 
-                        @if($i <> 0)
-                            @if($contato[$i]['hist_id'] <> $contato[$i-1]['hist_id'])
-                                <p class='mt-2 ml-2'><b>{{date("d/m/Y",strtotime($contato[$i]['hist_dt']))}}</b>-{{$contato[$i]['hist_cont']}}</p>
-                            @endif
-                        @else 
-                            <p class='mt-2 ml-2'><b>{{date("d/m/Y",strtotime($contato[$i]['hist_dt']))}}</b>-{{$contato[$i]['hist_cont']}}</p>
-                        @endif
+                    @for($i=0;$i < count($historico); $i ++) 
+                        <p class='mt-2 ml-2'><b>{{date("d/m/Y",strtotime($historico[$i]['created_at']))}}</b>-{{$historico[$i]['hist_cont']}}</p>
                     @endfor
                 </div>
             </div>
@@ -51,12 +45,18 @@
         <hr>
         <h3 class="display-5">Informações Contato</h3>
         <br>
-        <form action="gravaRetorno.php" method="POST" id="form1" name="form1">
-            <input type="hidden" name="idContato" value="{{$contato[0]['id']}}">
+        <form action="{{route('contato.update',$contato[0]['id'])}}" method="POST" id="form1" name="form1">
+            <input type="hidden" name="_method" value="PUT">
+            @csrf
             <labeL>Novo Retorno:</label>
-            <input class="form-control" type="date" min="{{date('Y-m-d', strtotime("+1 days",strtotime(date('Y-m-d'))))}}" id="dataRet" name="dataRet" value="{{date("d/m/Y",strtotime($contato[count($contato)-1]['ret_dt']))}}">
+            <input class="form-control" type="date" min="{{date('Y-m-d', strtotime("+1 days",strtotime(date('Y-m-d'))))}}" id="dataRet" name="dataRet" value="{{old('dataRet',date("Y-m-d",strtotime($contato[count($contato)-1]['ret_dt'])))}}">
             <label>Historico do Retorno:</label>
-            <textarea class="form-control" name="historico" rows="5"></textarea>
+            <textarea class="form-control  @error('historico') is-invalid @enderror" name="historico" rows="5"></textarea>
+            @error('historico')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
             <br>
             <input type="submit" class="form-control btn btn-danger" value="Gravar">
         </form>
