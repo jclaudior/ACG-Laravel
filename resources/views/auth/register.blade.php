@@ -5,6 +5,11 @@
     <br>
     <h1 class="display-5 mt-5">Cadatro  de Usuário</h1>
     <br>  
+    @if(isset($msg))
+          <div class="alert alert-success" role="alert">
+            {{$msg}}
+          </div>
+    @endif
     <form method="POST" action="{{ route('register') }}">
         @csrf
         <div class="form-group row">
@@ -41,9 +46,18 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="password-confirm" class="col-md-12 col-form-label">{{ __('Confirmação de Senhacd l  ') }}</label>
+            <label for="password-confirm" class="col-md-12 col-form-label">{{ __('Confirmação de Senha') }}</label>
             <div class="col-md-12">
                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-12 col-form-label">Permissão:</label>
+            <div class="col-md-12">
+                <select class="form-control" name="perm">
+                    <option value="padrao">Padrao</option>
+                    <option value="admin">Admin</option>
+                </select>
             </div>
         </div>
         <div class="form-group row mb-0">

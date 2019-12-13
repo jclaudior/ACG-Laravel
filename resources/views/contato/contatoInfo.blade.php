@@ -61,5 +61,6 @@
             <input type="submit" class="form-control btn btn-danger" value="Gravar">
         </form>
         <hr>
+        <a class="btn btn-dark mr-2" href="{{route('login')}}">Inicio</a><a class="btn btn-dark" href="/contato">Relatorio</a>
            
 </div>

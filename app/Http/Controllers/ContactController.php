@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use App\Cad_contact;
 use App\Cad_hists;
@@ -25,7 +26,11 @@ class ContactController extends Controller
      */
     public function index(Request $request)
     {
-        $valores = $request->all();
+        if($request->all() == null &&  Cache::has('valores')){
+            $valores = Cache::pull('valores');
+        }else{
+            $valores = $request->all();
+        }
 
         $request->user()->authorizeRoles(['padrao','admin']);
 
@@ -33,15 +38,18 @@ class ContactController extends Controller
 
         $users = json_decode(json_encode($users), true);
 
-        if($request->input('id') <> null){
-            $id = $request->input('id');
+        if($request->input('userID') <> null){
+            $id = $request->input('userID');
         }
         else{
             $id = Auth::user()->id;
         }
+        
+        
+        $retornos  = Cache::pull('retornos');
+        $contatos = Cache::pull('contatos');
+     
 
-        $retornos = null;
-        $contatos = null;
 
         if($request->input('tipo') == 2){
             if($request->input('DI') <> null && $request->input('DF') <> null && $request->input('F') <> null && $request->input('NF') <> null){
@@ -86,6 +94,7 @@ class ContactController extends Controller
             }
         }
 
+
         if($retornos<>null){
             $fin = 0;
             $nfin = 0;
@@ -108,6 +117,12 @@ class ContactController extends Controller
                 'NF' => "NF",
             ];
         }
+
+        Cache::put('retornos', $retornos);
+        Cache::put('contatos', $contatos);
+        Cache::put('valores', $valores);
+              
+
         return view("contato.contatoRel")->with(compact('retornos'))
                                         ->with(compact('users'))
                                         ->with(compact('fin'))
@@ -258,7 +273,7 @@ class ContactController extends Controller
         $novoHist->hist_cont = $request->input('historico');
         $novoHist->save();
 
-        return back();
+        return redirect('contato');
 
     }
 
