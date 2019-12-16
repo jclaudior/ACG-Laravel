@@ -4,7 +4,7 @@
     <div class="container">
         <br>
         <h1 class="display-4 mt-5">Usuários</h1>
-        <form action={{route('usuarios')}} method="GET">
+        <form action={{route('usuarios.index')}} method="GET">
             @csrf
             <div class="form-group row">
                 <div class="col-12">
@@ -30,17 +30,17 @@
                 @for ($i = 0; $i < count($list); $i++)
                     <div class="alert alert-secondary mx-1 my-2">
                         <div class="row">
-                            <div class="col-4">
+                            <div class="col-md-4 col-sm-12">
                                 <b>Nome: </b>{{$list[$i]['name']}}
                             </div>
-                            <div class="col-5">
+                            <div class="col-md-5 col-sm-12">
                                 <b>E-mail: </b>{{$list[$i]['email']}}
                             </div>
-                            <div class="col-2">
+                            <div class="col-md-2 col-sm-12">
                                 <b>Permissão: </b>{{$list[$i]['roles'][0]['role_name']}}
                             </div>
-                            <div class="col-1 text-right">
-                                <a href="">Edit</a>
+                            <div class="col-md-1 col-sm-12 text-right">
+                                <a href="{{route('usuarios.edit',$list[$i]['id'])}}">Edit</a>
                             </div>
                         </div>
                     </div>

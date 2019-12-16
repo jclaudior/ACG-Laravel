@@ -6,7 +6,13 @@
         <!--h1 class="display-4">Sistema Gerenciável Comercial</h1-->
         <br>
         <h1 class="display-5">Cadastro Contato</h1>
-
+        @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+            @if(Session::has('alert-' . $msg))
+                <div class="alert alert-{{ $msg }}" role="alert">
+                    {!! Session::get('alert-' . $msg) !!}
+                </div>
+            @endif
+        @endforeach
         <form name="form1" id="form1" action="{{route('contato.store')}}" method="POST">
             @csrf
             <div class="row">

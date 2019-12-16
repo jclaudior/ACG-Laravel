@@ -27,7 +27,7 @@
                     </a>
                     <div class="dropdown-menu bg-dark ">
                         <a class="dropdown-item text-light" href="{{route('register')}}">Cadastro de Usuário</a>
-                        <a class="dropdown-item text-light" href="{{route('usuarios')}}">Relatorio de Usuários</a>
+                        <a class="dropdown-item text-light" href="/usuarios">Relatorio de Usuários</a>
                     </div>  
                 </li>
             </ul>

@@ -194,6 +194,8 @@ class ContactController extends Controller
         $historico->save();
         
         $data = date('Y-m-d', strtotime("+1 days",strtotime(date('Y-m-d'))));
+        $request->session()->flash('alert-success', 'Contato criado com sucesso!');
+
         return redirect()->route('contato.create');
     }
 
@@ -273,7 +275,9 @@ class ContactController extends Controller
         $novoHist->hist_cont = $request->input('historico');
         $novoHist->save();
 
-        return redirect('contato');
+        $request->session()->flash('alert-success', 'Retorno atualizado com sucesso!');
+
+        return redirect()->route('contato.show',[$id]);
 
     }
 

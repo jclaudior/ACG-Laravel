@@ -12,15 +12,18 @@
 */
 
 Route::get('/', function () {
-    return view('auth.login');
+    if(Auth::user()){
+        return redirect()->route('home');
+    }
+    else{
+        return view('auth.login');
+    }
 });
 
 Auth::routes();
-
-Route::get('/home2', 'HomeController@someAdminStuff')->name('home2');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('contato', 'ContactController');
 
-Route::get('usuarios','userList@list')->name('usuarios');
+Route::resource('usuarios', 'UserController');

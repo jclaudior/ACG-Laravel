@@ -5,6 +5,13 @@
         <br>
         <h3 class="display-5">Retorno {{$contato[0]['contact_razao']}} </h3>
         <hr>
+        @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+            @if(Session::has('alert-' . $msg))
+                <div class="alert alert-{{ $msg }}" role="alert">
+                    {!! Session::get('alert-' . $msg) !!}
+                </div>
+            @endif
+        @endforeach
         <div class="row">
             <div class="col-lg-12">
                 <b>Fantazia:</b> {{$contato[0]['contact_fanta']}} 
