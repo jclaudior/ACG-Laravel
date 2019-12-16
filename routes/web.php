@@ -22,3 +22,5 @@ Route::get('/home2', 'HomeController@someAdminStuff')->name('home2');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('contato', 'ContactController');
+
+Route::get('usuarios','userList@list')->name('usuarios');
