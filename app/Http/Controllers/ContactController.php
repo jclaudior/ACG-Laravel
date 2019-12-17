@@ -52,6 +52,8 @@ class ContactController extends Controller
 
 
         if($request->input('tipo') == 2){
+            Cache::forget('contatos');
+            $contatos  = null;
             if($request->input('DI') <> null && $request->input('DF') <> null && $request->input('F') <> null && $request->input('NF') <> null){
                 $retornos = DB::table('cad_contacts')->join('cad_rets','cad_contacts.id','=','cad_rets.contact_id')
                             ->join('users','cad_contacts.user_id','=','users.id')
@@ -83,6 +85,8 @@ class ContactController extends Controller
             }
         }
         else if($request->input('tipo') == 1){
+            Cache::forget('retornos');
+            $retornos  = null;
             if($request->input('DI') <> null && $request->input('DF') <> null){
                 $contatos = DB::table('cad_contacts')
                             ->join('users','cad_contacts.user_id','=','users.id')
