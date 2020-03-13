@@ -3,13 +3,13 @@ Agenda Comercial Gerencialvel com Framwork Laravel
 <br>
 <a href="#"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
 <a href="#"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-<h5>Contato:</h5>
+<h4>Contato:</h4>
 <p>joaoclaudioribeiro.com.br</p>
 <p>E-mail:contato@joaoclaudioribeiro.com.br</p>
 <p>Cel.(11)94710-8920</p>
 
 
-Screenshots
+<h4>Screenshots</h4>
 <p>Login</p>
 <img src="http://joaoclaudioribeiro.com.br/imggit/login.jpg"></img>
 <p>Cadastro de Usúarios</p>
