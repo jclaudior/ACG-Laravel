@@ -1,7 +1,9 @@
 # ACG-Laravel
 Agenda Comercial Gerencialvel com Framwork Laravel
+<br>
 <a href="#"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
 <a href="#"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
+
 
 Screenshots
 <p>Login</p>
